@@ -5,22 +5,25 @@ max_epochs: 100
 batch_size: 128
 
 in_channels: 3
-num_classes: 100
+num_classes: 2
+num_boxes: 26
 use_pretrained_weights: true
 
 test_model: false
 checkpoint_path: #checkpoints/*****.ckpt used for 
 early_stopping_patience: 10
 num_workers: 16
+frames_per_sample: 3
 check_val_every_n_epoch: 3
 devices: auto
 enable_progress_bar: False
 
-wandb_project: CIFAR100
-wandb_experiment_name: resnet_50_idun
+wandb_project: RBKTDT
+wandb_experiment_name: Resnet50_RBK
 
 train_split_ratio: 0.8
-data_root: ./data
+train_data: 1_train-val_1min_aalesund_from_start/
+data_root: ./RBK_TDT17
 checkpoint_folder: ./checkpoints/
 
 

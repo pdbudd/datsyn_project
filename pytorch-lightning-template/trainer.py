@@ -1,4 +1,4 @@
-from datamodule import CIFAR100DataModule
+from datamodule_1 import RBKDataModule
 import lightning.pytorch as pl
 from lightning.pytorch.callbacks import EarlyStopping, ModelCheckpoint, LearningRateMonitor
 from lightning.pytorch.loggers import WandbLogger
@@ -20,9 +20,10 @@ class LitModel(pl.LightningModule):
 
         weights = ResNet50_Weights.DEFAULT if config.use_pretrained_weights else None
         self.model = resnet50(weights=weights)
-        self.model.fc = nn.Linear(2048, self.config.num_classes)
+        self.model.fc = nn.Identity()
         
-        self.loss_fn = nn.CrossEntropyLoss()
+        self.bbox_head = nn.Linear(2048, 4*self.config.num_boxes)
+        self.bbox_class = nn.Linear(2048, self.config.num_classes*self.config.num_boxes)
         self.acc_fn = Accuracy(task="multiclass", num_classes=self.config.num_classes)
     
     def configure_optimizers(self):
@@ -67,11 +68,13 @@ if __name__ == "__main__":
     
     pl.seed_everything(42)
     
-    dm = CIFAR100DataModule(
+    dm = RBKDataModule(
         batch_size=config.batch_size,
         num_workers=config.num_workers,
+        frames_per_sample=config.frames_per_sample,
         train_split_ratio=config.train_split_ratio,
-        data_root=config.data_root
+        data_root=config.data_root,
+        train_str=config.train_data
     )
     if config.checkpoint_path:
         model = LitModel.load_from_checkpoint(checkpoint_path=config.checkpoint_path, config=config)

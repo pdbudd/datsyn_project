@@ -1,0 +1,45 @@
+Using bfloat16 Automatic Mixed Precision (AMP)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+  | Name       | Type               | Params
+--------------------------------------------------
+0 | model      | ResNet             | 23.5 M
+1 | bbox_head  | Linear             | 213 K
+2 | bbox_class | Linear             | 106 K
+3 | acc_fn     | MulticlassAccuracy | 0
+--------------------------------------------------
+23.8 M    Trainable params
+0         Non-trainable params
+23.8 M    Total params
+95.311    Total estimated model params size (MB)
+Traceback (most recent call last):
+  File "/home/philipdb/dat2/datsyn_project/pytorch-lightning-template/trainer.py", line 103, in <module>
+    trainer.fit(model, datamodule=dm)
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/trainer/trainer.py", line 532, in fit
+    call._call_and_handle_interrupt(
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/trainer/call.py", line 43, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/trainer/trainer.py", line 571, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path)
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/trainer/trainer.py", line 963, in _run
+    _log_hyperparams(self)
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/loggers/utilities.py", line 64, in _log_hyperparams
+    datamodule_log_hyperparams = trainer.datamodule._log_hyperparams if trainer.datamodule is not None else False
+AttributeError: 'RBKDataModule' object has no attribute '_log_hyperparams'
+Traceback (most recent call last):
+  File "/home/philipdb/dat2/datsyn_project/pytorch-lightning-template/trainer.py", line 103, in <module>
+    trainer.fit(model, datamodule=dm)
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/trainer/trainer.py", line 532, in fit
+    call._call_and_handle_interrupt(
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/trainer/call.py", line 43, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/trainer/trainer.py", line 571, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path)
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/trainer/trainer.py", line 963, in _run
+    _log_hyperparams(self)
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/loggers/utilities.py", line 64, in _log_hyperparams
+    datamodule_log_hyperparams = trainer.datamodule._log_hyperparams if trainer.datamodule is not None else False
+AttributeError: 'RBKDataModule' object has no attribute '_log_hyperparams'

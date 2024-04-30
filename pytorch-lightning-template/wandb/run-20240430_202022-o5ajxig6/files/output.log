@@ -1,0 +1,45 @@
+Using bfloat16 Automatic Mixed Precision (AMP)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+Traceback (most recent call last):
+  File "/home/philipdb/dat2/datsyn_project/pytorch-lightning-template/trainer.py", line 103, in <module>
+    trainer.fit(model, datamodule=dm)
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/trainer/trainer.py", line 532, in fit
+    call._call_and_handle_interrupt(
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/trainer/call.py", line 43, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/trainer/trainer.py", line 571, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path)
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/trainer/trainer.py", line 941, in _run
+    call._call_setup_hook(self)  # allow user to setup lightning_module in accelerator environment
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/trainer/call.py", line 85, in _call_setup_hook
+    _call_lightning_datamodule_hook(trainer, "setup", stage=fn)
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/trainer/call.py", line 166, in _call_lightning_datamodule_hook
+    return fn(*args, **kwargs)
+  File "/home/philipdb/dat2/datsyn_project/pytorch-lightning-template/datamodule_1.py", line 104, in setup
+    val_size = int(len(full_dataset) * (1 - self.train_split_ratio))
+  File "/home/philipdb/dat2/datsyn_project/pytorch-lightning-template/datamodule_1.py", line 24, in __len__
+    return len(self.unique_images)
+TypeError: object of type 'int' has no len()
+Traceback (most recent call last):
+  File "/home/philipdb/dat2/datsyn_project/pytorch-lightning-template/trainer.py", line 103, in <module>
+    trainer.fit(model, datamodule=dm)
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/trainer/trainer.py", line 532, in fit
+    call._call_and_handle_interrupt(
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/trainer/call.py", line 43, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/trainer/trainer.py", line 571, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path)
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/trainer/trainer.py", line 941, in _run
+    call._call_setup_hook(self)  # allow user to setup lightning_module in accelerator environment
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/trainer/call.py", line 85, in _call_setup_hook
+    _call_lightning_datamodule_hook(trainer, "setup", stage=fn)
+  File "/home/philipdb/anaconda3/envs/tdt4265/lib/python3.10/site-packages/lightning/pytorch/trainer/call.py", line 166, in _call_lightning_datamodule_hook
+    return fn(*args, **kwargs)
+  File "/home/philipdb/dat2/datsyn_project/pytorch-lightning-template/datamodule_1.py", line 104, in setup
+    val_size = int(len(full_dataset) * (1 - self.train_split_ratio))
+  File "/home/philipdb/dat2/datsyn_project/pytorch-lightning-template/datamodule_1.py", line 24, in __len__
+    return len(self.unique_images)
+TypeError: object of type 'int' has no len()

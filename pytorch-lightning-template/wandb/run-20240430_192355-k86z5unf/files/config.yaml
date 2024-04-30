@@ -1,0 +1,105 @@
+wandb_version: 1
+
+max_lr:
+  desc: null
+  value: 0.01
+weight_decay:
+  desc: null
+  value: 0.0001
+momentum:
+  desc: null
+  value: 0.9
+max_epochs:
+  desc: null
+  value: 100
+batch_size:
+  desc: null
+  value: 128
+in_channels:
+  desc: null
+  value: 3
+num_classes:
+  desc: null
+  value: 2
+num_boxes:
+  desc: null
+  value: 26
+use_pretrained_weights:
+  desc: null
+  value: true
+test_model:
+  desc: null
+  value: false
+checkpoint_path:
+  desc: null
+  value: null
+early_stopping_patience:
+  desc: null
+  value: 10
+num_workers:
+  desc: null
+  value: 1
+frames_per_sample:
+  desc: null
+  value: 3
+check_val_every_n_epoch:
+  desc: null
+  value: 3
+devices:
+  desc: null
+  value: auto
+enable_progress_bar:
+  desc: null
+  value: false
+wandb_project:
+  desc: null
+  value: RBKTDT
+wandb_experiment_name:
+  desc: null
+  value: Resnet50_RBK
+train_split_ratio:
+  desc: null
+  value: 0.8
+train_data:
+  desc: null
+  value: 1_train-val_1min_aalesund_from_start/
+data_root:
+  desc: null
+  value: ./RBK_TDT17
+checkpoint_folder:
+  desc: null
+  value: ./checkpoints/
+_wandb:
+  desc: null
+  value:
+    python_version: 3.10.13
+    cli_version: 0.16.5
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1714497835.0
+    t:
+      1:
+      - 1
+      - 41
+      - 55
+      - 105
+      2:
+      - 1
+      - 41
+      - 55
+      - 105
+      3:
+      - 7
+      - 13
+      - 16
+      - 23
+      4: 3.10.13
+      5: 0.16.5
+      8:
+      - 5
+      13: linux-x86_64
+    m:
+    - 1: trainer/global_step
+      6:
+      - 3

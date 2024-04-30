@@ -1,0 +1,29 @@
+2024-04-30 19:49:06,721 INFO    MainThread:8598 [wandb_setup.py:_flush():76] Current SDK version is 0.16.5
+2024-04-30 19:49:06,721 INFO    MainThread:8598 [wandb_setup.py:_flush():76] Configure stats pid to 8598
+2024-04-30 19:49:06,721 INFO    MainThread:8598 [wandb_setup.py:_flush():76] Loading settings from /home/philipdb/.config/wandb/settings
+2024-04-30 19:49:06,721 INFO    MainThread:8598 [wandb_setup.py:_flush():76] Loading settings from /home/philipdb/dat2/datsyn_project/pytorch-lightning-template/wandb/settings
+2024-04-30 19:49:06,721 INFO    MainThread:8598 [wandb_setup.py:_flush():76] Loading settings from environment variables: {}
+2024-04-30 19:49:06,721 INFO    MainThread:8598 [wandb_setup.py:_flush():76] Applying setup settings: {'_disable_service': False}
+2024-04-30 19:49:06,721 INFO    MainThread:8598 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program_relpath': 'pytorch-lightning-template/trainer.py', 'program_abspath': '/home/philipdb/dat2/datsyn_project/pytorch-lightning-template/trainer.py', 'program': '/home/philipdb/dat2/datsyn_project/pytorch-lightning-template/trainer.py'}
+2024-04-30 19:49:06,721 INFO    MainThread:8598 [wandb_setup.py:_flush():76] Applying login settings: {}
+2024-04-30 19:49:06,721 INFO    MainThread:8598 [wandb_init.py:_log_setup():527] Logging user logs to ./wandb/run-20240430_194906-zux34rem/logs/debug.log
+2024-04-30 19:49:06,721 INFO    MainThread:8598 [wandb_init.py:_log_setup():528] Logging internal logs to ./wandb/run-20240430_194906-zux34rem/logs/debug-internal.log
+2024-04-30 19:49:06,721 INFO    MainThread:8598 [wandb_init.py:init():567] calling init triggers
+2024-04-30 19:49:06,721 INFO    MainThread:8598 [wandb_init.py:init():574] wandb.init called with sweep_config: {}
+config: {'max_lr': 0.01, 'weight_decay': 0.0001, 'momentum': 0.9, 'max_epochs': 100, 'batch_size': 128, 'in_channels': 3, 'num_classes': 2, 'num_boxes': 26, 'use_pretrained_weights': True, 'test_model': False, 'checkpoint_path': None, 'early_stopping_patience': 10, 'num_workers': 1, 'frames_per_sample': 3, 'check_val_every_n_epoch': 3, 'devices': 'auto', 'enable_progress_bar': False, 'wandb_project': 'RBKTDT', 'wandb_experiment_name': 'Resnet50_RBK', 'train_split_ratio': 0.8, 'train_data': '1_train-val_1min_aalesund_from_start/', 'data_root': './RBK_TDT17', 'checkpoint_folder': './checkpoints/'}
+2024-04-30 19:49:06,721 INFO    MainThread:8598 [wandb_init.py:init():617] starting backend
+2024-04-30 19:49:06,721 INFO    MainThread:8598 [wandb_init.py:init():621] setting up manager
+2024-04-30 19:49:06,722 INFO    MainThread:8598 [backend.py:_multiprocessing_setup():105] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2024-04-30 19:49:06,723 INFO    MainThread:8598 [wandb_init.py:init():629] backend started and connected
+2024-04-30 19:49:06,725 INFO    MainThread:8598 [wandb_init.py:init():721] updated telemetry
+2024-04-30 19:49:06,729 INFO    MainThread:8598 [wandb_init.py:init():754] communicating run to backend with 90.0 second timeout
+2024-04-30 19:49:07,427 INFO    MainThread:8598 [wandb_run.py:_on_init():2344] communicating current version
+2024-04-30 19:49:07,521 INFO    MainThread:8598 [wandb_run.py:_on_init():2353] got version response upgrade_message: "wandb version 0.16.6 is available!  To upgrade, please run:\n $ pip install wandb --upgrade"
+
+2024-04-30 19:49:07,521 INFO    MainThread:8598 [wandb_init.py:init():805] starting run threads in backend
+2024-04-30 19:49:10,785 INFO    MainThread:8598 [wandb_run.py:_console_start():2323] atexit reg
+2024-04-30 19:49:10,785 INFO    MainThread:8598 [wandb_run.py:_redirect():2178] redirect: wrap_raw
+2024-04-30 19:49:10,785 INFO    MainThread:8598 [wandb_run.py:_redirect():2243] Wrapping output streams.
+2024-04-30 19:49:10,785 INFO    MainThread:8598 [wandb_run.py:_redirect():2268] Redirects installed.
+2024-04-30 19:49:10,786 INFO    MainThread:8598 [wandb_init.py:init():848] run started, returning control to user process
+2024-04-30 19:49:16,809 WARNING MsgRouterThr:8598 [router.py:message_loop():77] message_loop has been closed

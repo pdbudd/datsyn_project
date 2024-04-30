@@ -1,0 +1,128 @@
+{
+    "os": "Linux-5.15.146.1-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "python": "3.10.13",
+    "heartbeatAt": "2024-04-30T17:49:09.124792",
+    "startedAt": "2024-04-30T17:49:06.718725",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/home/philipdb/dat2/datsyn_project/pytorch-lightning-template/trainer.py",
+    "codePathLocal": "trainer.py",
+    "codePath": "pytorch-lightning-template/trainer.py",
+    "git": {
+        "remote": "git@github.com:pdbudd/datsyn_project.git",
+        "commit": "4bf683d78004ede1e98fcb7e1893b8a07d9fc6e6"
+    },
+    "email": "philipdb@stud.ntnu.no",
+    "root": "/home/philipdb/dat2/datsyn_project",
+    "host": "PB1",
+    "username": "philipdb",
+    "executable": "/home/philipdb/anaconda3/envs/tdt4265/bin/python3",
+    "cpu_count": 8,
+    "cpu_count_logical": 16,
+    "cpu_freq": {
+        "current": 3792.646,
+        "min": 0.0,
+        "max": 0.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3792.646,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3792.646,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3792.646,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3792.646,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3792.646,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3792.646,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3792.646,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3792.646,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3792.646,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3792.646,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3792.646,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3792.646,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3792.646,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3792.646,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3792.646,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3792.646,
+            "min": 0.0,
+            "max": 0.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 1006.853931427002,
+            "used": 95.35634994506836
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+            "memory_total": 8585740288
+        }
+    ],
+    "memory": {
+        "total": 7.357822418212891
+    }
+}
