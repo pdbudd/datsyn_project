@@ -16,9 +16,9 @@ class BoundingBoxDataset(Dataset):
         self.train = train
         self.img_dir = os.path.join(img_dir,"img1/")
         if train:
-            self.annotations = pd.read_csv(os.path.join(img_dir,"gt/gt.txt"))
-        #self.unique_images = self.annotations['img_number'].tolist()
-        self.unique_images = 1802
+            self.annotations = pd.read_csv(os.path.join(img_dir,"gt/gt.txt"),names=['img_number', 'feature_ID', 'bbox_x', 'bbox_y', 'bbox_width', 'bbox_height', 'unknown1', 'class', 'unknown2'])
+        self.unique_images = self.annotations['img_number'].nunique()
+        print(self.unique_images)
         self.transform = transform
 
     def __len__(self):
@@ -28,7 +28,7 @@ class BoundingBoxDataset(Dataset):
         # Calculate indices of the frame and its neighbors
         num_neighbors = 1  # Fetch one neighboring frame on each side
 
-        frames = []
+        """ frames = []
         
         # Loop to gather frames
         for i in range(idx - num_neighbors, idx + num_neighbors + 1):
@@ -47,15 +47,29 @@ class BoundingBoxDataset(Dataset):
             if self.transform:
                 image = self.transform(image)
 
-            frames.append(image)
+            frames.append(image) """
 
         # Stack frames along a new dimension to maintain temporal order
-        stacked_frames = torch.stack(frames, dim=0)  # Stacking along new dimension
+        #stacked_frames = torch.stack(frames, dim=0)  # Stacking along new dimension
+        filename = f"{idx:06d}.jpg"
+        img_path = os.path.join(self.img_dir, filename)
+        image = Image.open(img_path)
+        if self.transform:
+                image = self.transform(image)
+        stacked_frames = image
 
         # Retrieve annotations for the central frame only
-        central_annotations = self.annotations[self.annotations['img_number'] == int(frame_idx)]
-        bboxes = torch.tensor(central_annotations[['bbox_x', 'bbox_y', 'bbox_width', 'bbox_height']].values, dtype=torch.float32)
-        labels = torch.tensor(central_annotations['class'].values, dtype=torch.long)
+        central_annotations = self.annotations[self.annotations['img_number'] == int(idx+1)]
+        bboxes = torch.zeros(104)
+        labels = torch.zeros(26)
+        for i in range(26):
+            bbox_info = central_annotations.loc[central_annotations['feature_ID'] == i + 1, ['bbox_x', 'bbox_y', 'bbox_width', 'bbox_height']]
+            if not bbox_info.empty:
+                bbox_tensor = torch.tensor(bbox_info.values[0], dtype=torch.float32)
+                bboxes[i*4:(i+1)*4] = bbox_tensor
+                label = central_annotations.loc[central_annotations['feature_ID'] == i + 1, 'class'].values
+                if len(label) > 0 and label[0] == 1:
+                    labels[i] = 1
         if not self.train:
             return stacked_frames
         return {
@@ -86,9 +100,6 @@ class RBKDataModule(pl.LightningDataModule):
         #self.grouped_annotations = self.annotations.groupby('img_number').apply(lambda x: x[['bbox_x', 'bbox_y', 'bbox_width', 'bbox_height', 'class']].values).to_dict()
 
     def prepare_data(self):
-        pass
-    
-    def prepare_data_per_node(self):
         pass
 
     def setup(self, stage=None):
@@ -133,8 +144,8 @@ class RBKDataModule(pl.LightningDataModule):
         if split == "train":
             return transforms.Compose([
                 *shared_transforms,
-                transforms.RandomCrop(32, padding=4, padding_mode='reflect'), 
-                transforms.RandomHorizontalFlip(),
+                #transforms.RandomCrop(32, padding=4, padding_mode='reflect'), 
+                #transforms.RandomHorizontalFlip(),
                 # ...
             ])
             
