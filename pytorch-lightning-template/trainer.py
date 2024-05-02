@@ -63,19 +63,43 @@ class LitModel(pl.LightningModule):
         self.model = resnet50(weights=weights)
         num_features = self.model.fc.in_features
         self.model.fc = nn.Identity()
+        
+        self.heatmap_head = nn.Sequential(
+            nn.Linear(num_features, 192*108),  # Adjust the output size to maintain spatial dimensions
+            nn.ReLU(inplace=True),
+            nn.Unflatten(1, (108, 192)),  # Adjust sizes to match the feature map size before flattening
+            nn.Sigmoid()
+        )
 
+        # Define the convolutional layers for heatmap prediction
+        """ self.heatmap_conv = nn.Sequential(
+            nn.Conv2d(1, 64, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(256, 1, kernel_size=3, stride=1, padding=1),
+            nn.Sigmoid()  # Apply sigmoid activation to output heatmap values between 0 and 1
+        ) """
+        #self.heatmap_interpolate = nn.Upsample(size=(108, 192), mode='bilinear', align_corners=False)
         # Determine the number of layers in the model
         total_layers = len(list(self.model.children()))
 
-        # Freeze all layers except the last 3
+        # Freeze all layers except the last 2
         for idx, child in enumerate(self.model.children()):
-            if idx < total_layers - 4:
+            if idx < total_layers - 2:
                 for param in child.parameters():
                     param.requires_grad = False
-
-        self.bbox_head = nn.Linear(num_features, 4*self.config.num_boxes)
+        self.heatmap_loss_fn = torch.nn.MSELoss()
+        self.bbox_head = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(192*108, 132),  # Adjust input size to match the feature map size
+            nn.ReLU(inplace=True),
+            nn.Linear(132, 5 * self.config.num_boxes),
+        )
         self.bbox_loss_fn = torch.nn.SmoothL1Loss()
-        self.bbox_class = nn.Linear(num_features, self.config.num_boxes)
+        self.bbox_class = nn.Sequential(
+            nn.Linear(num_features, 32),  # Adjust input size to match the feature map size
+            nn.ReLU(inplace=True),
+            nn.Linear(32, 2 * self.config.num_boxes),
+        )
         self.class_loss_fn = torch.nn.CrossEntropyLoss()
         self.acc_fn = self.Accuracy
     
@@ -89,27 +113,38 @@ class LitModel(pl.LightningModule):
         return accuracy
 
     def configure_optimizers(self):
-        optimizer = torch.optim.SGD(self.parameters(), lr=self.config.max_lr, momentum=self.config.momentum, weight_decay=self.config.weight_decay)
+        optimizer = torch.optim.Adadelta(self.parameters(), lr=0.15, weight_decay=0.0001, rho=0.5)
+        #optimizer = torch.optim.SGD(self.parameters(), lr=self.config.max_lr, momentum=self.config.momentum, weight_decay=self.config.weight_decay)
         lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=self.config.max_epochs)
         return [optimizer], [{"scheduler": lr_scheduler, "interval": "epoch"} ]
 
     def forward(self, x):
+        # Extract features from ResNet50
         features = self.model(x)
-        bbox_preds = self.bbox_head(features)
+
+        # Predict heatmap
+        heatmap = self.heatmap_head(features)
+        #heatmap = self.heatmap_interpolate(heatmap)
+
+        # Predict bounding box regression and class scores
+        bbox_preds = self.bbox_head(heatmap)
         class_preds = self.bbox_class(features)
-        return bbox_preds, class_preds
+
+        return bbox_preds, class_preds, heatmap
 
     def training_step(self, batch, batch_idx):
         stacked_frames = batch['stacked_frames']
         labels = batch['labels']
         bboxes = batch['bboxes']
-        bbox_preds, class_preds = self.forward(stacked_frames)
+        heatmap = batch['heatmap']
+        bbox_preds, class_preds, heatmap_pred = self.forward(stacked_frames)
         # Compute losses
         bbox_loss = self.bbox_loss_fn(bbox_preds, bboxes)
         class_loss = self.class_loss_fn(class_preds, labels)
+        heatmap_loss = self.heatmap_loss_fn(heatmap_pred, heatmap)
         
         # Combine losses
-        total_loss = bbox_loss + class_loss
+        total_loss = bbox_loss + class_loss + heatmap_loss
         
         acc = self.acc_fn(bbox_preds, bboxes, class_preds, labels)
         
@@ -126,14 +161,15 @@ class LitModel(pl.LightningModule):
         stacked_frames = batch['stacked_frames']
         labels = batch['labels']
         bboxes = batch['bboxes']
-        
-        bbox_preds, class_preds = self.forward(stacked_frames)
+        heatmap = batch['heatmap']
+        bbox_preds, class_preds, heatmap_pred = self.forward(stacked_frames)
         # Compute losses
         bbox_loss = self.bbox_loss_fn(bbox_preds, bboxes)
         class_loss = self.class_loss_fn(class_preds, labels)
+        heatmap_loss = self.heatmap_loss_fn(heatmap_pred, heatmap)
         
         # Combine losses
-        total_loss = bbox_loss + class_loss
+        total_loss = bbox_loss + class_loss + heatmap_loss
         
         acc = self.acc_fn(bbox_preds, bboxes, class_preds, labels)
         

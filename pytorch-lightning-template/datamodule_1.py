@@ -60,22 +60,46 @@ class BoundingBoxDataset(Dataset):
 
         # Retrieve annotations for the central frame only
         central_annotations = self.annotations[self.annotations['img_number'] == int(idx+1)]
-        bboxes = torch.zeros(104)
+        bboxes = torch.zeros(130)
+        labels = torch.zeros(52)
+        heatmap = torch.zeros((108,192))
+
+        for i in range(26):
+            bbox_info = central_annotations.loc[central_annotations['feature_ID'] == i + 1, ['bbox_x', 'bbox_y', 'bbox_width', 'bbox_height']]
+            if not bbox_info.empty:
+                x1, y1 = bbox_info['bbox_x'].iloc[0], bbox_info['bbox_y'].iloc[0]
+                x2, y2 = x1 + bbox_info['bbox_width'].iloc[0], y1 - bbox_info['bbox_height'].iloc[0]
+                x1_idx, x2_idx = int(x1 / 10), int(x2 / 10)
+                y1_idx, y2_idx = int(y1 / 10), int(y2 / 10)
+                heatmap[x1_idx:x2_idx, y1_idx:y2_idx] = 1
+                bbox = torch.tensor([x1, y1, x2, y2, 1], dtype=torch.float32)
+                label = central_annotations.loc[central_annotations['feature_ID'] == i + 1, 'class'].values[0]
+                labels[2*i:2*i+2] = torch.tensor([label, 1], dtype=torch.float32)  # Ensure label is converted to float32
+                bboxes[i*5:(i+1)*5] = bbox
+            else:
+                bboxes[i*5:(i+1)*5] = torch.tensor([0, 0, 0, 0, 0], dtype=torch.float32)
+                labels[2*i:2*(i+1)] = torch.tensor([0, 0], dtype=torch.float32)
+
+        #print(f"bbox_shape: {bboxes.shape}, labels_shape {labels.shape}")
+        """ bboxes = torch.zeros(104)
         labels = torch.zeros(26)
         for i in range(26):
             bbox_info = central_annotations.loc[central_annotations['feature_ID'] == i + 1, ['bbox_x', 'bbox_y', 'bbox_width', 'bbox_height']]
             if not bbox_info.empty:
                 bbox_tensor = torch.tensor(bbox_info.values[0], dtype=torch.float32)
-                bboxes[i*4:(i+1)*4] = bbox_tensor
+                bbox_tensor[2] = bbox_tensor[0]+bbox_tensor[2]
+                bbox_tensor[3] = bbox_tensor[1]-bbox_tensor[3]
+                bboxes[i*4:4*i+4] = bbox_tensor
                 label = central_annotations.loc[central_annotations['feature_ID'] == i + 1, 'class'].values
                 if len(label) > 0 and label[0] == 1:
-                    labels[i] = 1
+                    labels[i] = 1 """
         if not self.train:
             return stacked_frames
         return {
             'stacked_frames': stacked_frames,  # This is now a tensor of shape [3, C, H, W] assuming 3 channels per image
             'bboxes': bboxes,
-            'labels': labels
+            'labels': labels,
+            'heatmap' : heatmap
         }
 
 class RBKDataModule(pl.LightningDataModule):
@@ -118,8 +142,7 @@ class RBKDataModule(pl.LightningDataModule):
         # Split the dataset
         self.train_dataset = Subset(full_dataset, indices[:train_size])
         self.val_dataset = Subset(full_dataset, indices[train_size:])
-       
-    
+
     def train_dataloader(self):
         return DataLoader(self.train_dataset, batch_size=self.batch_size, num_workers=self.num_workers, pin_memory=True, shuffle=True)
 
@@ -136,7 +159,7 @@ class RBKDataModule(pl.LightningDataModule):
         std = [0.2023, 0.1994, 0.2010]
         
         shared_transforms = [
-            transforms.Resize((224,224)),
+            transforms.Resize((112,112)),
             transforms.ToTensor(),
             transforms.Normalize(mean, std) 
         ]
